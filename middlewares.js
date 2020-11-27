@@ -1,8 +1,6 @@
-const models = require("./models");
-
 module.exports.EnsureLoggedIn = function (req, res, next) {
   if (req.session.userId) {
-    req.currentUser = models.NewUser(3, "admin", "admin");
+    req.currentUser = {id: 1, username: "admin", password: "admin"}
     return next();
   }
 
