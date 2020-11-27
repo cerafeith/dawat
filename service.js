@@ -16,8 +16,19 @@ module.exports.UsersService = function (repo) {
      */
     registerUser(username, password) { 
       repo.saveUser(username, password);
-    }
+    },
   };
 };
 
-module.exports.GroupsService = function (repo) {};
+module.exports.GroupsService = function (repo) {
+  return {
+    /**
+     * 
+     * @param {string} groupId
+     * @returns {string}
+     */
+    inviteLink(groupId) {
+      return "http://localhost:3000/invite/" + groupId;
+    },
+  }
+};
