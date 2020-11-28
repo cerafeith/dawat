@@ -1,5 +1,5 @@
 // @ts-check
-const { v4: uuidv4 } = require('uuid');
+const { v4: uuidv4 } = require("uuid");
 
 /**
  * @type {Group[]}
@@ -25,7 +25,7 @@ let groups = [
     ],
   },
   {
-    id: "My Test Group",
+    id: "testinghello",
     name: "My group 2",
     adminUserId: 3,
     users: [
@@ -97,25 +97,27 @@ module.exports.InMemory = function (db) {
       return groups.find((g) => g.id == id);
     },
     /**
-     * 
-     * @param {string} name 
-     * @param {User} adminUser 
+     *
+     * @param {string} name
+     * @param {User} adminUser
      */
     saveGroup(name, adminUser) {
-      groups.push({ id: uuidv4(), name, adminUserId: adminUser.id, users: [adminUser] });
+      groups.push({
+        id: uuidv4(),
+        name,
+        adminUserId: adminUser.id,
+        users: [adminUser],
+      });
     },
     /**
-     * @param {Group} group 
-     * @param {User} user 
+     * @param {Group} group
+     * @param {User} user
      * @returns {Group}
      */
     addUserToGroup(group, user) {
       const modifiedGroup = {
         ...group,
-        users: [
-          ...group.users,
-          user
-        ]
+        users: [...group.users, user],
       };
 
       groups = groups.map((existingGroup) => {
@@ -129,11 +131,13 @@ module.exports.InMemory = function (db) {
       return modifiedGroup;
     },
     /**
-     * 
-     * @param {User} user
+     *
+     * @param {number} userId
      */
-    getUsersGroup(user) {
-      return groups.filter(group => group.users.includes(user));
-    }
-  }
+    getUsersGroup(userId) {
+      return groups.filter((group) =>
+        group.users.map((v) => v.id).includes(userId)
+      );
+    },
+  };
 };
