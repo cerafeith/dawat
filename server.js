@@ -2,7 +2,7 @@ const express = require("express");
 const exphbs = require("express-handlebars");
 const session = require("express-session");
 const bodyParser = require("body-parser");
-const morgan = require('morgan');
+const morgan = require("morgan");
 
 const context = require("./context");
 const middlewares = require("./middlewares");
@@ -35,8 +35,12 @@ function main() {
   );
 
   // Logger middleware
-  app.use(morgan('common'));
+  app.use(morgan("common"));
+
+  // Serves public files
   app.use(express.static("public"));
+
+  app.use(middlewares.CatchAllError);
 
   app.get("/", function (req, res) {
     const ctx = context.NewContext(req);
@@ -69,9 +73,13 @@ function main() {
     });
   });
 
-  app.get("/profile/:profileId", middlewares.EnsureLoggedIn, function (req, res) {
-    res.render("profile");
-  });
+  app.get(
+    "/profile/:profileId",
+    middlewares.EnsureLoggedIn,
+    function (req, res) {
+      res.render("profile");
+    }
+  );
 
   app.get("/groups", middlewares.EnsureLoggedIn, function (req, res) {
     const ctx = context.NewContext(req);
@@ -113,13 +121,9 @@ function main() {
           title: "401 Unauthorized",
           message: "Oops! You cannot view groups that you don't belong to",
         });
-      } else {
-        res.status(502);
-        return res.render("error", {
-          title: "Unexpected Error",
-          message: "An unexpected error has occured. Please try again later",
-        });
       }
+
+      throw e;
     }
   });
 

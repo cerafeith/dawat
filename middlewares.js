@@ -1,6 +1,6 @@
 module.exports.EnsureLoggedIn = function (req, res, next) {
   if (req.session.userId) {
-    req.currentUser = {id: 1, username: "admin", password: "admin"}
+    req.currentUser = { id: 1, username: "admin", password: "admin" };
     return next();
   }
 
@@ -14,4 +14,12 @@ module.exports.EnsureNotLoggedIn = function (req, res, next) {
   }
 
   next();
+};
+
+module.exports.CatchAllError = function (err, req, res, next) {
+  res.status(500);
+  res.render("error", {
+    title: "Unexpected Eror",
+    message: "An unexpected error has occured please try again later",
+  });
 };
