@@ -13,4 +13,13 @@
  * @property {string} name
  * @property {number} adminUserId,
  * @property {User[]} users
+ * @property {GroupEvents[]} events
+ */
+
+/**
+ * @typedef {Object} GroupEvents
+ * @property {string} id
+ * @property {Date} startDate
+ * @property {Date} endDate
+ * @property {User[]} paidUsers
  */

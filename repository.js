@@ -23,6 +23,7 @@ let groups = [
         username: "user1",
       },
     ],
+    events: [],
   },
   {
     id: "testinghello",
@@ -42,6 +43,7 @@ let groups = [
         username: "user1",
       },
     ],
+    events: [],
   },
 ];
 
@@ -72,7 +74,7 @@ module.exports.InMemory = function (db) {
      * @param {string} username
      * @param {string} password
      */
-    saveUser(username, password) {
+    createUser(username, password) {
       users.push({ id: users.length + 1, username, password });
     },
     /**
@@ -97,41 +99,31 @@ module.exports.InMemory = function (db) {
       return groups.find((g) => g.id == id);
     },
     /**
-     *
      * @param {string} name
      * @param {User} adminUser
      */
-    saveGroup(name, adminUser) {
+    createGroup(name, adminUser) {
       groups.push({
         id: uuidv4(),
         name,
         adminUserId: adminUser.id,
         users: [adminUser],
+        events: [],
       });
     },
     /**
      * @param {Group} group
-     * @param {User} user
-     * @returns {Group}
      */
-    addUserToGroup(group, user) {
-      const modifiedGroup = {
-        ...group,
-        users: [...group.users, user],
-      };
-
+    saveGroup(group) {
       groups = groups.map((existingGroup) => {
         if (existingGroup.id == group.id) {
-          return modifiedGroup;
+          return group;
         }
 
         return existingGroup;
       });
-
-      return modifiedGroup;
     },
     /**
-     *
      * @param {number} userId
      */
     getUsersGroup(userId) {

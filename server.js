@@ -113,7 +113,13 @@ function main() {
 
     try {
       const group = groupService.getGroup(ctx.userId, groupId);
-      res.render("group-details", { ...ctx, group });
+      const recentEvent = groupService.getRecentEventByDate(group, new Date());
+
+      res.render("group-details", {
+        ...ctx,
+        recentEvent,
+        group,
+      });
     } catch (e) {
       if (e instanceof service.UnauthorizedException) {
         res.status(401);
@@ -134,6 +140,31 @@ function main() {
 
     res.render("invite", { ...ctx, group});
   });
+
+  app.post(
+    "/groups/:groupId/event/new",
+    middlewares.EnsureLoggedIn,
+    function (req, res) {
+      const ctx = context.NewContext(req);
+      const { groupId } = req.params;
+      const numberOfDays = +req.body.numberOfDays;
+
+      groupService.createNewEvent(ctx.userId, groupId, numberOfDays);
+      res.redirect(`/groups/${groupId}`);
+    }
+  );
+
+  app.post(
+    "/groups/:groupId/event/:eventId",
+    middlewares.EnsureLoggedIn,
+    function (req, res) {
+      const { groupId, eventId } = req.params;
+      const { userId } = req.body;
+
+      groupService.addPaidUser(userId, groupId, eventId);
+      res.redirect(`/groups/${groupId}`);
+    }
+  );
 
   app.listen(port, () => {
     console.log(`Example app listening at http://localhost:${port}`);
