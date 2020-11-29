@@ -159,17 +159,16 @@ function main() {
   app.post(
     "/groups/:groupId/event/:eventId",
     middlewares.EnsureLoggedIn,
-    function (req, res, next) {
+    function (req, res) {
       const { groupId, eventId } = req.params;
 
       // Cast string to int because the backend expects it to be an int
       const userId = +req.body.userId;
-      // Cast string to bool
-      const paidStatus = !!req.body.paidStatus;
 
-      if (paidStatus) {
+      if (req.body.paidStatus == "paid") {
         groupService.addPaidUser(userId, groupId, eventId);
       }
+
       res.redirect(`/groups/${groupId}`);
     }
   );
@@ -201,7 +200,7 @@ function main() {
         });
       }
 
-      throw e;
+      next(e);
     }
   })
 

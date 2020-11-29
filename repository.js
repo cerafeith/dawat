@@ -1,4 +1,5 @@
 // @ts-check
+const { addDays, subDays } = require("date-fns");
 const { v4: uuidv4 } = require("uuid");
 
 /**
@@ -9,6 +10,7 @@ let groups = [
     id: "XXXXXX-XXXX-XXXX",
     name: "My group name",
     adminUserId: 3,
+    atomicCounter: 0,
     users: [
       {
         id: 3,
@@ -29,6 +31,7 @@ let groups = [
     id: "testinghello",
     name: "My group 2",
     adminUserId: 3,
+    atomicCounter: 0,
     users: [
       {
         id: 3,
@@ -43,7 +46,18 @@ let groups = [
         username: "user1",
       },
     ],
-    events: [],
+    events: [
+      {
+        id: uuidv4(),
+        endDate: addDays(new Date(), 5),
+        startDate: subDays(new Date(), 5),
+        paidUsers: [],
+        payeeUser: {
+          id: 3,
+          username: "admin",
+        },
+      },
+    ],
   },
 ];
 
@@ -109,6 +123,7 @@ module.exports.InMemory = function (db) {
         adminUserId: adminUser.id,
         users: [adminUser],
         events: [],
+        atomicCounter: 0,
       });
     },
     /**

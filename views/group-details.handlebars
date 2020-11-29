@@ -40,12 +40,12 @@
             <form action="/groups/{{@root.group.id}}/event/{{@root.recentEvent.id}}" method="POST">
                 {{#if (lookup @root.paidUserById this.id)}}
                 <input type="text" name="userId" value="{{this.id}}" class="d-none">
-                <input type="text" name="paidStatus" value="false" class="d-none">
-                <button class="btn bg-primary text-light btn-sm" type="submit">Not Paid</button>
+                <input type="text" name="paidStatus" value="unpaid" class="d-none">
+                <button class="btn bg-primary text-light btn-sm" type="submit">Paid</button>
                 {{else}}
                 <input type="text" name="userId" value="{{this.id}}" class="d-none">
-                <input type="text" name="paidStatus" value="true" class="d-none">
-                <button class="btn bg-primary text-light btn-sm" type="submit">Paid</button>
+                <input type="text" name="paidStatus" value="paid" class="d-none">
+                <button class="btn bg-primary text-light btn-sm" type="submit">Not Paid</button>
                 {{/if}}
             </form>
         </li>

@@ -1,3 +1,4 @@
+// @ts-check
 const { addDays, isWithinInterval } = require("date-fns");
 const { v4: uuidv4 } = require("uuid");
 
@@ -11,7 +12,6 @@ function InvalidArgumentException(message) {
   this.name = "InvalidArgumentException";
 }
 
-// @ts-check
 function UsersService(repo) {
   return {
     /**
@@ -79,8 +79,8 @@ function GroupsService(repo) {
       return group;
     },
     /**
-     * 
-     * @param {string} groupId 
+     *
+     * @param {string} groupId
      * @returns {Group}
      */
     getGroupById(groupId) {
@@ -89,11 +89,11 @@ function GroupsService(repo) {
     /**
      * @param {Group} group
      * @param {Date} date
-     * @returns {GroupEvents}
+     * @returns {GroupEvents | null}
      */
     getRecentEventByDate(group, date) {
       if (group.events.length === 0) {
-        return false;
+        return null;
       }
 
       // Clone the events list, so that we can run sort fn & not mutate the one from group.sort
@@ -127,6 +127,12 @@ function GroupsService(repo) {
         );
       }
 
+      const userClone = [...group.users];
+
+      userClone.sort((a, b) => (a.id > b.id ? 0 : -1));
+
+      const payeeUser = userClone[group.atomicCounter];
+
       const modifiedGroup = {
         ...group,
         events: [
@@ -136,16 +142,18 @@ function GroupsService(repo) {
             startDate: new Date(),
             endDate: addDays(new Date(), numberOfDays),
             paidUsers: [],
+            payeeUser,
           },
         ],
+        atomicCounter: group.atomicCounter + 1,
       };
 
       repo.saveGroup(modifiedGroup);
     },
     /**
-     * 
-     * @param {number} userId 
-     * @param {string} groupId 
+     *
+     * @param {number} userId
+     * @param {string} groupId
      */
     addUserToGroup(userId, groupId) {
       const user = repo.getUserById(userId);
@@ -159,11 +167,8 @@ function GroupsService(repo) {
 
       const modifiedGroup = {
         ...group,
-        users: [
-          ...group.users,
-          user,
-        ]
-      }
+        users: [...group.users, user],
+      };
       repo.saveGroup(modifiedGroup);
     },
     /**
