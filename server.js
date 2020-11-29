@@ -114,11 +114,13 @@ function main() {
     try {
       const group = groupService.getGroup(ctx.userId, groupId);
       const recentEvent = groupService.getRecentEventByDate(group, new Date());
+      const inviteLink = groupService.inviteLink(groupId);
 
       res.render("group-details", {
         ...ctx,
         recentEvent,
         group,
+        inviteLink,
       });
     } catch (e) {
       if (e instanceof service.UnauthorizedException) {
@@ -131,14 +133,6 @@ function main() {
 
       throw e;
     }
-  });
-
-  app.get("/groups/invite/:groupId", middlewares.EnsureLoggedIn, function (req, res) {
-    const ctx = context.NewContext(req);
-    const groupId = req.params.groupId;
-    const group = groupService.getGroup(ctx.userId, groupId);
-
-    res.render("invite", { ...ctx, group});
   });
 
   app.post(
