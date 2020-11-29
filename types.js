@@ -14,7 +14,7 @@
  * @property {string} name
  * @property {number} adminUserId,
  * @property {User[]} users
- * @property {number} atomicCounter
+ * @property {number} atomicCounter A counter that gets incremented everytime a new event is created
  * @property {GroupEvents[]} events
  */
 
