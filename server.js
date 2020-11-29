@@ -105,43 +105,53 @@ function main() {
     }
   );
 
-  app.get("/groups/:groupId", middlewares.EnsureLoggedIn, function (req, res, next) {
-    const ctx = context.NewContext(req);
-    const groupId = req.params.groupId;
+  app.get(
+    "/groups/:groupId",
+    middlewares.EnsureLoggedIn,
+    function (req, res, next) {
+      const ctx = context.NewContext(req);
+      const groupId = req.params.groupId;
 
-    try {
-      const group = groupService.getGroup(ctx.userId, groupId);
-      const recentEvent = groupService.getRecentEventByDate(group, new Date());
-      const inviteLink = groupService.inviteLink(groupId);
+      try {
+        const group = groupService.getGroup(ctx.userId, groupId);
+        const recentEvent = groupService.getRecentEventByDate(
+          group,
+          new Date()
+        );
+        const inviteLink = groupService.inviteLink(groupId);
 
-      let paidUserById = {};
+        let paidUserById = {};
 
-      if (recentEvent) {
-        recentEvent.paidUsers.forEach(user => {
-          paidUserById[user.id] = true;
+        if (recentEvent) {
+          recentEvent.paidUsers.forEach((user) => {
+            paidUserById[user.id] = true;
+          });
+        }
+
+        let adminUserById = {};
+        adminUserById[group.adminUserId] = true;
+
+        res.render("group-details", {
+          ...ctx,
+          recentEvent,
+          group,
+          inviteLink,
+          paidUserById,
+          adminUserById,
         });
+      } catch (e) {
+        if (e instanceof service.UnauthorizedException) {
+          res.status(401);
+          return res.render("error", {
+            title: "401 Unauthorized",
+            message: "Oops! You cannot view groups that you don't belong to",
+          });
+        }
+
+        next(e);
       }
-
-
-      res.render("group-details", {
-        ...ctx,
-        recentEvent,
-        group,
-        inviteLink,
-        paidUserById,
-      });
-    } catch (e) {
-      if (e instanceof service.UnauthorizedException) {
-        res.status(401);
-        return res.render("error", {
-          title: "401 Unauthorized",
-          message: "Oops! You cannot view groups that you don't belong to",
-        });
-      }
-
-      next(e);
     }
-  });
+  );
 
   app.post(
     "/groups/:groupId/event/new",
@@ -167,8 +177,7 @@ function main() {
 
       if (req.body.paidStatus == "paid") {
         groupService.addPaidUser(userId, groupId, eventId);
-      }
-      else {
+      } else {
         groupService.removePaidUser(userId, groupId, eventId);
       }
 
@@ -185,7 +194,7 @@ function main() {
       ...ctx,
       group,
     });
-  })
+  });
 
   app.post("/invite/:groupId", middlewares.EnsureLoggedIn, function (req, res) {
     const ctx = context.NewContext(req);
@@ -205,8 +214,7 @@ function main() {
 
       next(e);
     }
-  })
-
+  });
 
   app.use(middlewares.CatchAllError);
 
