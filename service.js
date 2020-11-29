@@ -78,6 +78,14 @@ function GroupsService(repo) {
       return group;
     },
     /**
+     * 
+     * @param {string} groupId 
+     * @returns {Group}
+     */
+    getGroupById(groupId) {
+      return repo.getGroupById(groupId);
+    },
+    /**
      * @param {Group} group
      * @param {Date} date
      * @returns {GroupEvents}
@@ -134,6 +142,30 @@ function GroupsService(repo) {
       repo.saveGroup(modifiedGroup);
     },
     /**
+     * 
+     * @param {number} userId 
+     * @param {string} groupId 
+     */
+    addUserToGroup(userId, groupId) {
+      const user = repo.getUserById(userId);
+      const group = repo.getGroupById(groupId);
+
+      if (group.users.map((v) => v.id).includes(userId)) {
+        throw new InvalidArgumentException(
+          `User ${user.username} is already a member of ${group.name}`
+        );
+      }
+
+      const modifiedGroup = {
+        ...group,
+        users: [
+          ...group.users,
+          user,
+        ]
+      }
+      repo.saveGroup(modifiedGroup);
+    },
+    /**
      * @param {number} userId 
      * @param {string} groupId 
      * @param {string} eventId 
@@ -177,4 +209,5 @@ module.exports = {
   UsersService,
   GroupsService,
   UnauthorizedException,
+  InvalidArgumentException,
 };

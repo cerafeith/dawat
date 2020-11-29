@@ -160,6 +160,37 @@ function main() {
     }
   );
 
+  app.get("/invite/:groupId", middlewares.EnsureLoggedIn, function (req, res) {
+    const ctx = context.NewContext(req);
+    const { groupId } = req.params;
+    const group = groupService.getGroupById(groupId);
+
+    res.render("invite-confirm", {
+      ...ctx,
+      group,
+    });
+  })
+
+  app.post("/invite/:groupId", middlewares.EnsureLoggedIn, function (req, res) {
+    const ctx = context.NewContext(req);
+    const { groupId } = req.params;
+
+    try {
+      groupService.addUserToGroup(ctx.userId, groupId);
+      res.redirect(`/groups/${groupId}`);
+    } catch (e) {
+      if (e instanceof service.InvalidArgumentException) {
+        res.status(400);
+        return res.render("error", {
+          title: "400 Bad Request",
+          message: `Oops! ${e.message}!`,
+        });
+      }
+
+      throw e;
+    }
+  })
+
   app.listen(port, () => {
     console.log(`Example app listening at http://localhost:${port}`);
   });
