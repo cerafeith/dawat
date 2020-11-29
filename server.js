@@ -127,6 +127,14 @@ function main() {
     }
   });
 
+  app.get("/groups/invite/:groupId", middlewares.EnsureLoggedIn, function (req, res) {
+    const ctx = context.NewContext(req);
+    const groupId = req.params.groupId;
+    const group = groupService.getGroup(ctx.userId, groupId);
+
+    res.render("invite", { ...ctx, group});
+  });
+
   app.listen(port, () => {
     console.log(`Example app listening at http://localhost:${port}`);
   });
