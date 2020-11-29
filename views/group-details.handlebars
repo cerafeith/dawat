@@ -78,9 +78,9 @@
 
                                 {{#each @root.group.users}}
                                     {{#if (includesId ../paidUsers this.id)}}
-                                    <td>Paid</td>
+                                    <td>✔️</td>
                                     {{else}}
-                                    <td>Not Paid</td>
+                                    <td>❌</td>
                                     {{/if}}
                                 {{/each}}
 

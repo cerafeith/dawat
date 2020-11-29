@@ -55,12 +55,40 @@ let groups = [
     events: [
       {
         id: uuidv4(),
-        endDate: addDays(new Date(), 5),
-        startDate: subDays(new Date(), 5),
-        paidUsers: [],
+        endDate: addDays(new Date(2020, 2, 9), 7),
+        startDate: new Date(2020, 2, 9),
+        paidUsers: [
+          {
+            id: 3,
+            username: "admin",
+          },
+        ],
         payeeUser: {
           id: 3,
           username: "admin",
+        },
+      },
+      {
+        id: uuidv4(),
+        endDate: addDays(new Date(2020, 9, 2), 7),
+        startDate: new Date(2020, 9, 2),
+        paidUsers: [
+          {
+            id: 3,
+            username: "admin",
+          },
+          {
+            id: 2,
+            username: "user2",
+          },
+          {
+            id: 1,
+            username: "user1",
+          },
+        ],
+        payeeUser: {
+          id: 2,
+          username: "user2",
         },
       },
     ],
@@ -86,8 +114,8 @@ let users = [
   {
     id: 1,
     username: "user1",
-    password: "admin",
-    groupJoinDate: new Date(2020, 6, 6),
+    password: "user1",
+    groupJoinDate: new Date(2020, 2, 9),
   },
 ];
 
