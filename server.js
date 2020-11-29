@@ -19,7 +19,19 @@ function main() {
   const groupService = service.GroupsService(db);
 
   // Use handlebars as the template engine
-  app.engine("handlebars", exphbs());
+  app.engine(
+    "handlebars",
+    exphbs({
+      helpers: {
+        includes: function (list, elem) {
+          return list.includes(elem);
+        },
+        includesId: function (list, id) {
+          return list.map(v => v.id).includes(id);
+        },
+      },
+    })
+  );
   app.set("view engine", "handlebars");
   // This middleware makes it possible to parse form-data requests
   app.use(bodyParser.urlencoded({ extended: true }));

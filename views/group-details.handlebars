@@ -2,90 +2,96 @@
     <div class="form-inline justify-content-between mb-2">
         <h1 class="bd-title" id="content">{{group.name}}</h1>
         <div>
-        <input type="text" value="{{inviteLink}}" id="groupLink" class="form-control">
-        <button class="btn btn-primary btn-sm" onclick="copyText()">Copy Link</button>
+            <input type="text" value="{{inviteLink}}" id="groupLink" class="form-control">
+            <button class="btn btn-primary btn-sm" onclick="copyText()">Copy Link</button>
         </div>
     </div>
     <div class="my-4"></div>
 
     <h5 class="font-weight-bold">Events</h5>
     <div class="accordion" id="accordionExample">
-  <div class="card">
-    <div class="card-header" id="headingOne">
-      <h2 class="mb-0">
-        <button class="btn btn-block text-left" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
-        {{#if recentEvent }}
-        <h6 class="font-weight-bold">Current event</h6>
-        {{else}}
-        <h6 class="font-weight-bold">Create a new event</h6>
-        {{/if}}
-      </h2>
-    </div>
+        <div class="card">
+            <div class="card-header" id="headingOne">
+                <h2 class="mb-0">
+                    <button class="btn btn-block text-left" type="button" data-toggle="collapse"
+                        data-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                        {{#if recentEvent }}
+                        <h6 class="font-weight-bold">Current event</h6>
+                        {{else}}
+                        <h6 class="font-weight-bold">Create a new event</h6>
+                        {{/if}}
+                </h2>
+            </div>
 
-    <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionExample">
-      <div class="card-body">
-        {{#if recentEvent}}
-        {{recentEvent.startDate}} - {{recentEvent.endDate}}
-        {{else}}
-        <form action="/groups/{{group.id}}/event/new" method="POST">
-        <div class="form-check">
-            <input class="form-check-input" type="radio" name="numberOfDays" id="numberOfDays1" value="7" checked>
-            <label class="form-check-label" for="numberOfDays1">
-                1 Weeks
-            </label>
-        </div>
-        <div class="form-check">
-            <input class="form-check-input" type="radio" name="numberOfDays" id="numberOfDays2" value="14">
-            <label class="form-check-label" for="numberOfDays2">
-                2 Weeks
-            </label>
-        </div>
-        <button class="btn btn-primary btn-sm  mt-2">Create Event</button>
-        </form>
-    {{/if}}
-      </div>
-    </div>
-  </div>
-  <div class="card">
-    <div class="card-header" id="headingTwo">
-      <h2 class="mb-0">
-        <button class="btn btn-block text-left collapsed" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-          <h6 class="font-weight-bold">Past events</h6>
-        </button>
-      </h2>
-    </div>
-    <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">
-      <div class="card-body">
-          <table class="table">
-            <thead>
-                <tr>
-                <th scope="col">Start Date</th>
-                <th scope="col">End Date</th>
-                {{#each group.users}}
-                <th scope="col">{{this.username}}</th>
-                {{/each}}
-                </tr>
-            </thead>
-            <tbody>
-                {{#each group.events}}
-                <tr>
-                    <td>{{this.startDate}}</td>
-                    <td>{{this.endDate}}</td>
-                    {{#each @root.group.users}}
-                    {{#if (lookup @root.paidUserById this.id)}}
-                    <td>Paid</td>
+            <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionExample">
+                <div class="card-body">
+                    {{#if recentEvent}}
+                    {{recentEvent.startDate}} - {{recentEvent.endDate}}
                     {{else}}
-                    <td>Not Paid</td>
+                    <form action="/groups/{{group.id}}/event/new" method="POST">
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="numberOfDays" id="numberOfDays1"
+                                value="7" checked>
+                            <label class="form-check-label" for="numberOfDays1">
+                                1 Weeks
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="numberOfDays" id="numberOfDays2"
+                                value="14">
+                            <label class="form-check-label" for="numberOfDays2">
+                                2 Weeks
+                            </label>
+                        </div>
+                        <button class="btn btn-primary btn-sm  mt-2">Create Event</button>
+                    </form>
                     {{/if}}
-                    {{/each}}
-                </tr>
-                {{/each}}
-            </tbody>
-            </table>
-      </div>
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-header" id="headingTwo">
+                <h2 class="mb-0">
+                    <button class="btn btn-block text-left collapsed" type="button" data-toggle="collapse"
+                        data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                        <h6 class="font-weight-bold">Past events</h6>
+                    </button>
+                </h2>
+            </div>
+            <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">
+                <div class="card-body">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col">Start Date</th>
+                                <th scope="col">End Date</th>
+                                {{#each group.users}}
+                                <th scope="col">{{this.username}}</th>
+                                {{/each}}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {{#each group.events}}
+                            <tr>
+                                <td>{{this.startDate}}</td>
+                                <td>{{this.endDate}}</td>
+
+                                {{#each @root.group.users}}
+                                    {{#if (includesId ../paidUsers this.id)}}
+                                    <td>Paid</td>
+                                    {{else}}
+                                    <td>Not Paid</td>
+                                    {{/if}}
+                                {{/each}}
+
+                            </tr>
+                            {{/each}}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
     </div>
-  </div>
-</div>
 
     <div class="my-5"></div>
 
@@ -100,29 +106,29 @@
                 {{/if}}
             </div>
             {{#if @root.recentEvent}}
-                {{#if @root.adminViewing}}
-                <form action="/groups/{{@root.group.id}}/event/{{@root.recentEvent.id}}" method="POST">
-                    {{#if (lookup @root.paidUserById this.id)}}
-                    <input type="text" name="userId" value="{{this.id}}" class="d-none">
-                    <input type="text" name="paidStatus" value="unpaid" class="d-none">
-                    <button class="btn bg-primary text-light btn-sm" type="submit">Paid</button>
-                    {{else}}
-                    <input type="text" name="userId" value="{{this.id}}" class="d-none">
-                    <input type="text" name="paidStatus" value="paid" class="d-none">
-                    <button class="btn bg-primary text-light btn-sm" type="submit">Not Paid</button>
-                    {{/if}}
-                </form>
+            {{#if @root.adminViewing}}
+            <form action="/groups/{{@root.group.id}}/event/{{@root.recentEvent.id}}" method="POST">
+                {{#if (lookup @root.paidUserById this.id)}}
+                <input type="text" name="userId" value="{{this.id}}" class="d-none">
+                <input type="text" name="paidStatus" value="unpaid" class="d-none">
+                <button class="btn bg-primary text-light btn-sm" type="submit">Paid</button>
                 {{else}}
-                    {{#if (lookup @root.paidUserById this.id)}}
-                    <input type="text" name="userId" value="{{this.id}}" class="d-none">
-                    <input type="text" name="paidStatus" value="unpaid" class="d-none" >
-                    <button class="btn bg-success text-light btn-sm" type="submit" disabled>Paid</button>
-                    {{else}}
-                    <input type="text" name="userId" value="{{this.id}}" class="d-none">
-                    <input type="text" name="paidStatus" value="paid" class="d-none">
-                    <button class="btn bg-danger text-light btn-sm" type="submit" disabled>Not Paid</button>
-                    {{/if}}
+                <input type="text" name="userId" value="{{this.id}}" class="d-none">
+                <input type="text" name="paidStatus" value="paid" class="d-none">
+                <button class="btn bg-primary text-light btn-sm" type="submit">Not Paid</button>
                 {{/if}}
+            </form>
+            {{else}}
+            {{#if (lookup @root.paidUserById this.id)}}
+            <input type="text" name="userId" value="{{this.id}}" class="d-none">
+            <input type="text" name="paidStatus" value="unpaid" class="d-none">
+            <button class="btn bg-success text-light btn-sm" type="submit" disabled>Paid</button>
+            {{else}}
+            <input type="text" name="userId" value="{{this.id}}" class="d-none">
+            <input type="text" name="paidStatus" value="paid" class="d-none">
+            <button class="btn bg-danger text-light btn-sm" type="submit" disabled>Not Paid</button>
+            {{/if}}
+            {{/if}}
             {{/if}}
         </li>
         {{/each}}
