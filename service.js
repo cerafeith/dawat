@@ -1,4 +1,5 @@
 const { addDays, isWithinInterval } = require("date-fns");
+const { v4: uuidv4 } = require("uuid");
 
 function UnauthorizedException(message) {
   this.message = message;
