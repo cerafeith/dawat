@@ -36,7 +36,12 @@
     <ul class="list-group">
         {{#each group.users}}
         <li class="list-group-item d-flex justify-content-between align-items-center">
-            {{this.username}}
+            <div>
+                {{this.username}}
+                {{#if (lookup @root.adminUserById this.id)}}
+                <span class="badge badge-pill badge-secondary">Admin</span>
+                {{/if}}
+            </div>
             {{#if @root.recentEvent}}
             <form action="/groups/{{@root.group.id}}/event/{{@root.recentEvent.id}}" method="POST">
                 {{#if (lookup @root.paidUserById this.id)}}
