@@ -37,6 +37,7 @@
         {{#each group.users}}
         <li class="list-group-item d-flex justify-content-between align-items-center">
             {{this.username}}
+            {{#if @root.recentEvent}}
             <form action="/groups/{{@root.group.id}}/event/{{@root.recentEvent.id}}" method="POST">
                 {{#if (lookup @root.paidUserById this.id)}}
                 <input type="text" name="userId" value="{{this.id}}" class="d-none">
@@ -48,6 +49,7 @@
                 <button class="btn bg-primary text-light btn-sm" type="submit">Not Paid</button>
                 {{/if}}
             </form>
+            {{/if}}
         </li>
         {{/each}}
     </ul>
