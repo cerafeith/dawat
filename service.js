@@ -167,9 +167,9 @@ function GroupsService(repo) {
       repo.saveGroup(modifiedGroup);
     },
     /**
-     * @param {number} userId 
-     * @param {string} groupId 
-     * @param {string} eventId 
+     * @param {number} userId id of the user that has paid
+     * @param {string} groupId id of the group
+     * @param {string} eventId id of the event
      */
     addPaidUser(userId, groupId, eventId) {
       /**

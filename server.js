@@ -40,8 +40,6 @@ function main() {
   // Serves public files
   app.use(express.static("public"));
 
-  app.use(middlewares.CatchAllError);
-
   app.get("/", function (req, res) {
     const ctx = context.NewContext(req);
     res.render("home", ctx);
@@ -107,7 +105,7 @@ function main() {
     }
   );
 
-  app.get("/groups/:groupId", function (req, res) {
+  app.get("/groups/:groupId", middlewares.EnsureLoggedIn, function (req, res, next) {
     const ctx = context.NewContext(req);
     const groupId = req.params.groupId;
 
@@ -116,11 +114,21 @@ function main() {
       const recentEvent = groupService.getRecentEventByDate(group, new Date());
       const inviteLink = groupService.inviteLink(groupId);
 
+      let paidUserById = {};
+
+      if (recentEvent) {
+        recentEvent.paidUsers.forEach(user => {
+          paidUserById[user.id] = true;
+        });
+      }
+
+
       res.render("group-details", {
         ...ctx,
         recentEvent,
         group,
         inviteLink,
+        paidUserById,
       });
     } catch (e) {
       if (e instanceof service.UnauthorizedException) {
@@ -131,7 +139,7 @@ function main() {
         });
       }
 
-      throw e;
+      next(e);
     }
   });
 
@@ -151,11 +159,17 @@ function main() {
   app.post(
     "/groups/:groupId/event/:eventId",
     middlewares.EnsureLoggedIn,
-    function (req, res) {
+    function (req, res, next) {
       const { groupId, eventId } = req.params;
-      const { userId } = req.body;
 
-      groupService.addPaidUser(userId, groupId, eventId);
+      // Cast string to int because the backend expects it to be an int
+      const userId = +req.body.userId;
+      // Cast string to bool
+      const paidStatus = !!req.body.paidStatus;
+
+      if (paidStatus) {
+        groupService.addPaidUser(userId, groupId, eventId);
+      }
       res.redirect(`/groups/${groupId}`);
     }
   );
@@ -190,6 +204,9 @@ function main() {
       throw e;
     }
   })
+
+
+  app.use(middlewares.CatchAllError);
 
   app.listen(port, () => {
     console.log(`Example app listening at http://localhost:${port}`);

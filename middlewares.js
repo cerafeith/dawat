@@ -16,6 +16,7 @@ module.exports.EnsureNotLoggedIn = function (req, res, next) {
 };
 
 module.exports.CatchAllError = function (err, req, res, next) {
+  console.error(err);
   res.status(500);
   res.render("error", {
     title: "Unexpected Eror",

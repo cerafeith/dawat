@@ -2,19 +2,18 @@
     <h1 class="bd-title" id="content">{{group.name}}</h1>
 
     <div class="my-4"></div>
-    {{!-- <h6 class="font-weight-bold">Users</h6> --}}
-    <div class="d-md-flex align-items-center justify-content-between mb-4">
-        <h6 class="font-weight-bold">Users</h6>
-        <input type="text" value="{{inviteLink}}" id="groupLink">
+    <div class="form-group col-md-6 p-0">
+        <label for="groupLink">Invite Link</label>
+        <input type="text" value="{{inviteLink}}" id="groupLink" class="form-control mb-2">
         <button class="btn btn-primary btn-sm" onclick="copyText()">Copy Link</button>
     </div>
 
     <h6 class="font-weight-bold">Event</h6>
     {{#if recentEvent }}
-        {{recentEvent.startDate}} - {{recentEvent.endDate}}
+    {{recentEvent.startDate}} - {{recentEvent.endDate}}
     {{else}}
     <h6 class="font-weight-bold">Create a new event</h6>
-    <form action="/groups/{{group.id}}/event/new" method="POST" >
+    <form action="/groups/{{group.id}}/event/new" method="POST">
         <div class="form-check">
             <input class="form-check-input" type="radio" name="numberOfDays" id="numberOfDays1" value="7" checked>
             <label class="form-check-label" for="numberOfDays1">
@@ -38,6 +37,17 @@
         {{#each group.users}}
         <li class="list-group-item d-flex justify-content-between align-items-center">
             {{this.username}}
+            <form action="/groups/{{@root.group.id}}/event/{{@root.recentEvent.id}}" method="POST">
+                {{#if (lookup @root.paidUserById this.id)}}
+                <input type="text" name="userId" value="{{this.id}}" class="d-none">
+                <input type="text" name="paidStatus" value="false" class="d-none">
+                <button class="btn bg-primary text-light btn-sm" type="submit">Not Paid</button>
+                {{else}}
+                <input type="text" name="userId" value="{{this.id}}" class="d-none">
+                <input type="text" name="paidStatus" value="true" class="d-none">
+                <button class="btn bg-primary text-light btn-sm" type="submit">Paid</button>
+                {{/if}}
+            </form>
         </li>
         {{/each}}
     </ul>
