@@ -119,7 +119,17 @@ module.exports.InMemory = function (db) {
      * @returns {Group}
      */
     getGroupById(id) {
-      return groups.find((g) => g.id == id);
+      const group =  groups.find((g) => g.id == id);
+
+      // Clone the events list, so that we can run sort fn & not mutate the one from group.sort
+      const clonedEvents = [...group.events];
+
+      clonedEvents.sort((a, b) => (a.startDate < b.startDate ? 0 : -1));
+
+      return {
+        ...group,
+        events: clonedEvents,
+      }
     },
     /**
      * @param {string} name

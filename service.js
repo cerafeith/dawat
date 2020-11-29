@@ -96,12 +96,7 @@ function GroupsService(repo) {
         return null;
       }
 
-      // Clone the events list, so that we can run sort fn & not mutate the one from group.sort
-      const clonedEvents = [...group.events];
-
-      clonedEvents.sort((a, b) => (a.startDate < b.startDate ? 0 : -1));
-
-      const [event] = clonedEvents;
+      const [event] = group.events;
 
       if (
         isWithinInterval(date, {
