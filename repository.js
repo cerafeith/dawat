@@ -15,14 +15,17 @@ let groups = [
       {
         id: 3,
         username: "admin",
+        groupJoinDate: new Date(2020, 6, 6),
       },
       {
         id: 2,
         username: "user2",
+        groupJoinDate: new Date(2020, 6, 6),
       },
       {
         id: 1,
         username: "user1",
+        groupJoinDate: new Date(2020, 6, 5),
       },
     ],
     events: [],
@@ -36,14 +39,17 @@ let groups = [
       {
         id: 3,
         username: "admin",
+        groupJoinDate: new Date(2020, 6, 6),
       },
       {
         id: 2,
         username: "user2",
+        groupJoinDate: new Date(2020, 6, 6),
       },
       {
         id: 1,
         username: "user1",
+        groupJoinDate: new Date(2020, 6, 5),
       },
     ],
     events: [
@@ -69,16 +75,19 @@ let users = [
     id: 3,
     username: "admin",
     password: "admin",
+    groupJoinDate: new Date(2020, 6, 6),
   },
   {
     id: 2,
     username: "user2",
     password: "user2",
+    groupJoinDate: new Date(2020, 6, 6),
   },
   {
     id: 1,
     username: "user1",
     password: "admin",
+    groupJoinDate: new Date(2020, 6, 6),
   },
 ];
 

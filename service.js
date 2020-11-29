@@ -129,9 +129,9 @@ function GroupsService(repo) {
 
       const userClone = [...group.users];
 
-      userClone.sort((a, b) => (a.id > b.id ? 0 : -1));
+      userClone.sort((a, b) => (a.groupJoinDate > b.groupJoinDate ? 0 : -1));
 
-      const payeeUser = userClone[group.atomicCounter];
+      const payeeUser = userClone[group.atomicCounter % userClone.length];
 
       const modifiedGroup = {
         ...group,
@@ -167,7 +167,7 @@ function GroupsService(repo) {
 
       const modifiedGroup = {
         ...group,
-        users: [...group.users, user],
+        users: [...group.users, { ...user, groupJoinDate: new Date() }],
       };
       repo.saveGroup(modifiedGroup);
     },
@@ -209,10 +209,10 @@ function GroupsService(repo) {
       repo.saveGroup(modifiedGroup);
     },
     /**
-     * 
-     * @param {number} userId 
-     * @param {string} groupId 
-     * @param {string} eventId 
+     *
+     * @param {number} userId
+     * @param {string} groupId
+     * @param {string} eventId
      */
     removePaidUser(userId, groupId, eventId) {
       /**
@@ -229,7 +229,9 @@ function GroupsService(repo) {
         ...group,
         events: group.events.map((existingEvent) => {
           if (existingEvent.id == eventId) {
-            const modifiedPaidUsers = existingEvent.paidUsers.filter((removeUser) => removeUser.id != userId);
+            const modifiedPaidUsers = existingEvent.paidUsers.filter(
+              (removeUser) => removeUser.id != userId
+            );
             return {
               ...existingEvent,
               paidUsers: modifiedPaidUsers,

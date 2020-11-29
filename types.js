@@ -5,6 +5,7 @@
  * @property {number} id
  * @property {string} username
  * @property {string} [password]
+ * @property {Date} [groupJoinDate] Date of which the user joined the group
  */
 
 /**
