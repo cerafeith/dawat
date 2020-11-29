@@ -208,6 +208,40 @@ function GroupsService(repo) {
 
       repo.saveGroup(modifiedGroup);
     },
+    /**
+     * 
+     * @param {number} userId 
+     * @param {string} groupId 
+     * @param {string} eventId 
+     */
+    removePaidUser(userId, groupId, eventId) {
+      /**
+       * @type {Group}
+       */
+      const group = repo.getGroupById(groupId);
+      if (!group.users.map((v) => v.id).includes(userId)) {
+        throw new UnauthorizedException(
+          `addPaidUser by userId: ${userId} not authorized to view group`
+        );
+      }
+
+      const modifiedGroup = {
+        ...group,
+        events: group.events.map((existingEvent) => {
+          if (existingEvent.id == eventId) {
+            const modifiedPaidUsers = existingEvent.paidUsers.filter((removeUser) => removeUser.id != userId);
+            return {
+              ...existingEvent,
+              paidUsers: modifiedPaidUsers,
+            };
+          }
+
+          return existingEvent;
+        }),
+      };
+
+      repo.saveGroup(modifiedGroup);
+    },
   };
 }
 

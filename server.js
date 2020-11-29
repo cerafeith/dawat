@@ -168,6 +168,9 @@ function main() {
       if (req.body.paidStatus == "paid") {
         groupService.addPaidUser(userId, groupId, eventId);
       }
+      else {
+        groupService.removePaidUser(userId, groupId, eventId);
+      }
 
       res.redirect(`/groups/${groupId}`);
     }
