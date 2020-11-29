@@ -23,11 +23,18 @@ function main() {
     "handlebars",
     exphbs({
       helpers: {
-        includes: function (list, elem) {
-          return list.includes(elem);
+        includesId: function (list, id, options) {
+          if (list.map((v) => v.id).includes(id)) {
+            return options.fn(this);
+          }
+
+          return options.inverse(this);
         },
-        includesId: function (list, id) {
-          return list.map(v => v.id).includes(id);
+        ifEq: function (a, b, options) {
+          if (a === b) {
+            return options.fn(this);
+          }
+          return options.inverse(this);
         },
       },
     })
@@ -132,16 +139,16 @@ function main() {
         );
         const inviteLink = groupService.inviteLink(groupId);
 
-        let paidUserById = {};
-
+        const paidUserById = {};
         if (recentEvent) {
           recentEvent.paidUsers.forEach((user) => {
             paidUserById[user.id] = true;
           });
         }
 
-        let adminUserById = {};
-        adminUserById[group.adminUserId] = true;
+        const adminUserById = {
+          [group.adminUserId]: true,
+        };
 
         const adminViewing = group.adminUserId == ctx.userId;
 

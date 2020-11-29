@@ -77,11 +77,11 @@
                                 <td>{{this.endDate}}</td>
 
                                 {{#each @root.group.users}}
-                                    {{#if (includesId ../paidUsers this.id)}}
-                                    <td>✔️</td>
-                                    {{else}}
-                                    <td>❌</td>
-                                    {{/if}}
+                                {{#includesId ../paidUsers this.id}}
+                                <td>✔️</td>
+                                {{else}}
+                                <td>❌</td>
+                                {{/includesId}}
                                 {{/each}}
 
                             </tr>
@@ -103,6 +103,12 @@
                 {{this.username}}
                 {{#if (lookup @root.adminUserById this.id)}}
                 <span class="badge badge-pill badge-secondary">Admin</span>
+                {{/if}}
+
+                {{#if @root.recentEvent}}
+                {{#ifEq @root.recentEvent.payeeUser.id this.id}}
+                <span class="badge badge-pill badge-secondary">Payee</span>
+                {{/ifEq}}
                 {{/if}}
             </div>
             {{#if @root.recentEvent}}
