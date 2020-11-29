@@ -8,7 +8,7 @@ const { v4: uuidv4 } = require("uuid");
 let groups = [
   {
     id: "XXXXXX-XXXX-XXXX",
-    name: "My group name",
+    name: "Group 1",
     adminUserId: 3,
     atomicCounter: 0,
     users: [
@@ -32,8 +32,8 @@ let groups = [
   },
   {
     id: "testinghello",
-    name: "My group 2",
-    adminUserId: 3,
+    name: "Group 2",
+    adminUserId: 1,
     atomicCounter: 0,
     users: [
       {

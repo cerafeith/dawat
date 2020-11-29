@@ -131,6 +131,8 @@ function main() {
         let adminUserById = {};
         adminUserById[group.adminUserId] = true;
 
+        const adminViewing = group.adminUserId == ctx.userId;
+
         res.render("group-details", {
           ...ctx,
           recentEvent,
@@ -138,6 +140,7 @@ function main() {
           inviteLink,
           paidUserById,
           adminUserById,
+          adminViewing,
         });
       } catch (e) {
         if (e instanceof service.UnauthorizedException) {
@@ -219,7 +222,7 @@ function main() {
   app.use(middlewares.CatchAllError);
 
   app.listen(port, () => {
-    console.log(`Example app listening at http://localhost:${port}`);
+    console.log(`Dawat listening at http://localhost:${port}`);
   });
 }
 
