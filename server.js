@@ -8,6 +8,7 @@ const context = require("./context");
 const middlewares = require("./middlewares");
 const repository = require("./repository");
 const service = require("./service");
+const { format } = require("date-fns");
 
 const port = 3000;
 
@@ -27,7 +28,6 @@ function main() {
           if (list.map((v) => v.id).includes(id)) {
             return options.fn(this);
           }
-
           return options.inverse(this);
         },
         ifEq: function (a, b, options) {
@@ -36,6 +36,9 @@ function main() {
           }
           return options.inverse(this);
         },
+        dateFormat(date, formatStr) {
+          return format(date, formatStr);
+        }
       },
     })
   );

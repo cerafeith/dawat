@@ -2,7 +2,7 @@
     <div class="form-inline justify-content-between mb-2">
         <h1 class="bd-title" id="content">{{group.name}}</h1>
         <div>
-            <input type="text" value="{{inviteLink}}" id="groupLink" class="form-control">
+            <input type="text" value="{{inviteLink}}" id="groupLink" class="form-control" disabled>
             <button class="btn btn-primary btn-sm" onclick="copyText()">Copy Link</button>
         </div>
     </div>
@@ -17,8 +17,10 @@
                         data-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
                         {{#if recentEvent }}
                         <h6 class="font-weight-bold">Current event</h6>
-                        {{else}}
+                        {{else if @root.adminViewing}}
                         <h6 class="font-weight-bold">Create a new event</h6>
+                        {{ else }}
+                        <h6 class="font-weight-bold">No new event</h6>
                         {{/if}}
                 </h2>
             </div>
@@ -26,8 +28,9 @@
             <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionExample">
                 <div class="card-body">
                     {{#if recentEvent}}
-                    {{recentEvent.startDate}} - {{recentEvent.endDate}}
-                    {{else}}
+                    {{ dateFormat recentEvent.startDate 'MMMM d yyyy'}} -
+                    {{ dateFormat recentEvent.endDate 'MMMM d yyyy'}}
+                    {{else  if @root.adminViewing}}
                     <form action="/groups/{{group.id}}/event/new" method="POST">
                         <div class="form-check">
                             <input class="form-check-input" type="radio" name="numberOfDays" id="numberOfDays1"
@@ -45,6 +48,8 @@
                         </div>
                         <button class="btn btn-primary btn-sm  mt-2">Create Event</button>
                     </form>
+                    {{ else }}
+                    There is currently no new events
                     {{/if}}
                 </div>
             </div>
@@ -59,12 +64,12 @@
                 </h2>
             </div>
             <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">
-                <div class="card-body">
+                <div class="card-body overflow-auto">
                     <table class="table">
                         <thead>
                             <tr>
-                                <th scope="col">Start Date</th>
-                                <th scope="col">End Date</th>
+                                <th scope="col">Start</th>
+                                <th scope="col">End</th>
                                 {{#each group.users}}
                                 <th scope="col">{{this.username}}</th>
                                 {{/each}}
@@ -73,8 +78,8 @@
                         <tbody>
                             {{#each group.events}}
                             <tr>
-                                <td>{{this.startDate}}</td>
-                                <td>{{this.endDate}}</td>
+                                <td>{{ dateFormat this.startDate 'MMMM d yyyy'}}</td>
+                                <td>{{dateFormat this.endDate 'MMMM d yyyy'}}</td>
 
                                 {{#each @root.group.users}}
                                 {{#includesId ../paidUsers this.id}}
@@ -107,7 +112,7 @@
 
                 {{#if @root.recentEvent}}
                 {{#ifEq @root.recentEvent.payeeUser.id this.id}}
-                <span class="badge badge-pill badge-secondary">Payee</span>
+                <span class="badge badge-pill badge-success">Payee</span>
                 {{/ifEq}}
                 {{/if}}
             </div>
